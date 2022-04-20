@@ -3,10 +3,12 @@ const api = express();
 
 api.use(express.json());
 
+const settings = require('./data/settings.json');
+
 //Initialize the mongoDB database
 const persistence = require('mongoose');
 async function Main(){
-    await persistence.connect('mongodb://127.0.0.1:27017/demo');
+    await persistence.connect(settings.PersistenceConnectionString);
 }
 
 //Connect to the mongoDB Database, then initialize the controllers
