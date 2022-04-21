@@ -16,12 +16,16 @@ module.exports = async function (api, persistence) {
 
     //Get single user by ID
     api.get('/user', async function (req, res) {
+        var AuthResult = await helper.AuthorizeHeader(req.headers['authorization']);
+        if (!AuthResult) { return res.sendStatus(403)}
         const user = await UserModel.findOne({"id":req.query.id});
         res.json(user);
     });
 
     //Create new user
     api.post('/user/create', async function (req, res) {
+        var AuthResult = await helper.AuthorizeHeader(req.headers['authorization']);
+        if (!AuthResult) { return res.sendStatus(403)}
         var ValidationResult = helper.ValidateUser(req.body);
         if (ValidationResult === true){
             const HighestUser = await UserModel.find({},['id'],{skip:0,limit:1,sort:{id:-1}});
@@ -37,6 +41,8 @@ module.exports = async function (api, persistence) {
 
     //Update existing user
     api.put('/user/update', async function (req, res) {
+        var AuthResult = await helper.AuthorizeHeader(req.headers['authorization']);
+        if (!AuthResult) { return res.sendStatus(403)}
         const ValidationResult = helper.ValidateUser(req.body);
         if (ValidationResult === true){
             const user = await UserModel.findOneAndUpdate({id:req.body.id},req.body,{new: true});
@@ -47,6 +53,8 @@ module.exports = async function (api, persistence) {
 
     //Delete a user based on ID
     api.delete('/user/delete', async function (req, res) {
+        var AuthResult = await helper.AuthorizeHeader(req.headers['authorization']);
+        if (!AuthResult) { return res.sendStatus(403)}
         var deleted = await UserModel.deleteOne({id:req.query.id});
         res.json(deleted);
     });
