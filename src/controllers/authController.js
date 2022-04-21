@@ -4,8 +4,10 @@ const settings = require('../../data/settings.json');
 
 module.exports = async function (api, persistence) {
 
+    //Create AuthModel based on schemaAuth
     var AuthModel = require('../schemas/schemaAuth')(persistence); 
 
+    //Get bearer token with client secret
     api.get('/token', async function (req, res) {
         var ClientSecret = req.query.secret;
 
